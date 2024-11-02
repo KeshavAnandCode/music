@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Combination Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Unique Song Combination Generator</h1>
+    <button onclick="generateCombination()">Generate Song Combination</button>
+
+    <h2>Your Combination</h2>
+    <p id="combinationDisplay"></p>
+
+    <button id="sendTextButton" style="display:none;">Send to Phone</button>
+
+    <script>
+        const totalSongs = 10; // Total number of songs
+        const numToChoose = 4; // Number of songs to choose
+        const seenCombinations = new Set();
+
+        function uniqueSongCombination() {
+            let combination;
+            do {
+                combination = Array.from({length: numToChoose}, () => Math.floor(Math.random() * totalSongs) + 1);
+                combination.sort((a, b) => a - b); // Sort the combination
+                combination = combination.join(', '); // Convert to string for comparison
+            } while (seenCombinations.has(combination));
+            seenCombinations.add(combination);
+            return combination;
+        }
+
+        function generateCombination() {
+            const combination = uniqueSongCombination();
+            document.getElementById("combinationDisplay").innerText = combination;
+            document.getElementById("sendTextButton").style.display = "inline"; // Show the send button
+        }
+
+        document.getElementById("sendTextButton").addEventListener("click", function() {
+            const combination = document.getElementById("combinationDisplay").innerText;
+            if (combination) {
+                const phoneNumber = prompt("Enter your phone number (format: 1234567890):");
+                if (phoneNumber) {
+                    const smsLink = `sms:${phoneNumber}?body=Your%20unique%20song%20combination%20is:%20${encodeURIComponent(combination)}`;
+                    window.location.href = smsLink; // Opens SMS app
+                }
+            } else {
+                alert("Please generate a combination first.");
+            }
+        });
+    </script>
+</body>
+</html>
