@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Combination Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #qrCode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Unique Song Combination Generator</h1>
+    <button onclick="generateCombination()">Generate Song Combination</button>
+
+    <h2>Your QR Code</h2>
+    <canvas id="qrCode"></canvas>
+
+    <script>
+        const totalSongs = 10; // Total number of songs
+        const numToChoose = 4; // Number of songs to choose
+        const seenCombinations = new Set();
+
+        function uniqueSongCombination() {
+            let combination;
+            do {
+                combination = Array.from({length: numToChoose}, () => Math.floor(Math.random() * totalSongs) + 1);
+                combination.sort((a, b) => a - b); // Sort the combination
+                combination = combination.join(', '); // Convert to string for comparison
+            } while (seenCombinations.has(combination));
+            seenCombinations.add(combination);
+            return combination;
+        }
+
+        function generateCombination() {
+            const combination = uniqueSongCombination();
+            alert("Your unique song combination: " + combination);
+        }
+
+        function generateQRCode(url) {
+            const qr = new QRious({
+                element: document.getElementById('qrCode'),
+                value: url,
+                size: 200
+            });
+        }
+
+        // Automatically generate the QR code when the page loads
+        window.onload = function() {
+            const hostedURL = 'YOUR_HOSTED_URL'; // Replace this with your hosted URL
+            generateQRCode(hostedURL);
+        };
+    </script>
+</body>
+</html>
